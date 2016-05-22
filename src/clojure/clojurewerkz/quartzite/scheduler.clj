@@ -20,9 +20,13 @@
 ;;
 
 (defn ^Scheduler initialize
-  "Initializes a scheduler."
-  []
-  (org.quartz.impl.StdSchedulerFactory/getDefaultScheduler))
+  "Initializes a scheduler. If provide properties file resource file name , it will cover the default properties configure. "
+  ([]
+   (org.quartz.impl.StdSchedulerFactory/getDefaultScheduler))
+  ([properties]
+   (-> (org.quartz.impl.StdSchedulerFactory. properties)
+       .getDefaultScheduler))
+  )
 
 (defn ^Scheduler start
   "Starts Quartzite's scheduler. Newly initialized scheduler is not active (in standby mode),
@@ -74,10 +78,10 @@
 (defn add-job
   "Adds given job to the scheduler with no associated trigger"
   ([^Scheduler scheduler ^JobDetail job-detail ^Boolean replace]
-     (.addJob ^Scheduler scheduler job-detail replace))
-  
+   (.addJob ^Scheduler scheduler job-detail replace))
+
   ([^Scheduler scheduler ^JobDetail job-detail]
-     (add-job scheduler job-detail false)))
+   (add-job scheduler job-detail false)))
 
 (defn add-trigger
   "Adds given trigger to the scheduled job with which the trigger has been associated"
